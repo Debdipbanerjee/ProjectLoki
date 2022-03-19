@@ -2,13 +2,14 @@
 
 
 #include "FPSObjective.h"
+#include "ProjectLoki/ProjectLokiCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AFPSObjective::AFPSObjective()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	//PrimaryActorTick.bCanEverTick = true;
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
 	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -32,17 +33,21 @@ void AFPSObjective::BeginPlay()
 }
 
 // Called every frame
-void AFPSObjective::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
-}
 
 void AFPSObjective::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 
 	PlayEffects();
+
+	AProjectLokiCharacter* MyCharacter = Cast<AProjectLokiCharacter>(OtherActor);
+	if(MyCharacter)
+	{
+		MyCharacter->bIsCarryingObjective = true;
+
+		Destroy();
+	}
 }
 
 void AFPSObjective::PlayEffects()

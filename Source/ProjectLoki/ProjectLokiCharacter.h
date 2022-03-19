@@ -51,13 +51,14 @@ class AProjectLokiCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UMotionControllerComponent* L_MotionController;
 
-public:
-	AProjectLokiCharacter();
 
 protected:
 	virtual void BeginPlay();
 
 public:
+
+	AProjectLokiCharacter();
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -85,6 +86,9 @@ public:
 	/** Whether to use motion controller location for aiming. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	uint8 bUsingMotionControllers : 1;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Gameplay")
+		bool bIsCarryingObjective;
 
 protected:
 	

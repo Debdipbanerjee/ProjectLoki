@@ -2,7 +2,8 @@
 
 
 #include "FPSExtractionZone.h"
-
+#include "ProjectLoki/ProjectLokiCharacter.h"
+#include "ProjectLoki/ProjectLokiGameMode.h"
 #include "Components/DecalComponent.h"
 
 // Sets default values
@@ -32,6 +33,18 @@ AFPSExtractionZone::AFPSExtractionZone()
 void AFPSExtractionZone::HandleOverlap( UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	UE_LOG(LogTemp, Log, TEXT("Overlapped with Extraction Zone"));
+
+	AProjectLokiCharacter* MyPawn = Cast<AProjectLokiCharacter>(OtherActor);
+
+	if(MyPawn && MyPawn->bIsCarryingObjective)
+	{
+		AProjectLokiGameMode* GM = Cast<AProjectLokiGameMode>(GetWorld()->GetAuthGameMode());
+
+		if(GM)
+		{
+			GM->CompleteMission(MyPawn);
+		}
+	}
 }
 
 

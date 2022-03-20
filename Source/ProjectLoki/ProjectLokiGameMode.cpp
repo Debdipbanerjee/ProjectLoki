@@ -15,3 +15,13 @@ AProjectLokiGameMode::AProjectLokiGameMode()
 	// use our custom HUD class
 	HUDClass = AProjectLokiHUD::StaticClass();
 }
+
+void AProjectLokiGameMode::CompleteMission(APawn* InstigatorPawn)
+{
+	if(InstigatorPawn)
+	{
+		InstigatorPawn->DisableInput(nullptr);
+	}
+
+	OnMissionCompleted(InstigatorPawn);
+}

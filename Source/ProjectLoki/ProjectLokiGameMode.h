@@ -13,6 +13,11 @@ class AProjectLokiGameMode : public AGameModeBase
 
 public:
 	AProjectLokiGameMode();
+
+	void CompleteMission(APawn* InstigatorPawn);
+
+	UFUNCTION(BlueprintImplementableEvent, Category= "GameMode")
+	void OnMissionCompleted(APawn* InstigatorPawn);
 };
 
 

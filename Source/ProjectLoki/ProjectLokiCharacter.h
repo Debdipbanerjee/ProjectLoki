@@ -13,6 +13,7 @@ class UCameraComponent;
 class UMotionControllerComponent;
 class UAnimMontage;
 class USoundBase;
+class UPawnNoiseEmitterComponent;
 
 UCLASS(config=Game)
 class AProjectLokiCharacter : public ACharacter
@@ -51,6 +52,8 @@ class AProjectLokiCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UMotionControllerComponent* L_MotionController;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPawnNoiseEmitterComponent* NoiseEmitterComponent;
 
 protected:
 	virtual void BeginPlay();

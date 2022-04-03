@@ -4,6 +4,7 @@
 #include "FPSAIGuard.h"
 #include "DrawDebugHelpers.h"
 #include "ProjectLoki/ProjectLokiGameMode.h"
+#include "Blueprint/AIBlueprintHelperLibrary.h"
 
 
 
@@ -27,6 +28,11 @@ void AFPSAIGuard::BeginPlay()
 	OriginalRotation = GetActorRotation();
 	PawnSensingComp->OnSeePawn.AddDynamic(this, &AFPSAIGuard::OnPawnSeen);
 	PawnSensingComp->OnHearNoise.AddDynamic(this, &AFPSAIGuard::OnNoiseHeard);
+
+	if(bPatrol)
+	{
+		MoveToNextPatrolPoint();
+	}
 	
 }
 
@@ -72,7 +78,13 @@ void AFPSAIGuard::OnNoiseHeard(APawn* NoiseInstigator, const FVector& Location, 
 
 	SetGuardState(EAIState::Suspicious);
 	
-	
+	//if we hear a noise, stop patroling
+	AController* controller = GetController();
+
+	if(controller)
+	{
+		controller->StopMovement();
+	}
 }
 
 void AFPSAIGuard::ResetOrientation()
@@ -85,6 +97,12 @@ void AFPSAIGuard::ResetOrientation()
 	SetActorRotation(OriginalRotation);
 
 	SetGuardState(EAIState::Idle);
+
+	//start again
+	if (bPatrol)
+	{
+		MoveToNextPatrolPoint();
+	}
 }
 
 void AFPSAIGuard::SetGuardState(EAIState NewState)
@@ -104,6 +122,32 @@ void AFPSAIGuard::SetGuardState(EAIState NewState)
 void AFPSAIGuard::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if(CurrentPatrolPoint)
+	{
+		FVector Delta = GetActorLocation() - CurrentPatrolPoint->GetActorLocation();
+		float DistanceToGoal = Delta.Size();
+
+		if(DistanceToGoal <= 100.0f)
+		{
+			MoveToNextPatrolPoint();
+		}
+	}
+
+}
+
+void AFPSAIGuard::MoveToNextPatrolPoint()
+{
+	if(CurrentPatrolPoint == nullptr || CurrentPatrolPoint == SecondPatrolPoint)
+	{
+		CurrentPatrolPoint = FirstPatrolPoint;
+	}
+	else
+	{
+		CurrentPatrolPoint = SecondPatrolPoint;
+	}
+
+	UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), CurrentPatrolPoint);
 
 }
 

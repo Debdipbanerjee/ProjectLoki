@@ -47,7 +47,7 @@ void AFPSExtractionZone::HandleOverlap( UPrimitiveComponent* OverlappedComponent
 		AProjectLokiGameMode* GM = Cast<AProjectLokiGameMode>(GetWorld()->GetAuthGameMode());
 		if (GM)
 		{
-			GM->CompleteMission(MyPawn);
+			GM->CompleteMission(MyPawn, true);
 		}
 	}
 	else

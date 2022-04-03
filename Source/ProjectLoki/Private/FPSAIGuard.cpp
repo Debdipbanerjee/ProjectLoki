@@ -3,6 +3,8 @@
 
 #include "FPSAIGuard.h"
 #include "DrawDebugHelpers.h"
+#include "ProjectLoki/ProjectLokiGameMode.h"
+
 
 
 
@@ -22,6 +24,7 @@ AFPSAIGuard::AFPSAIGuard()
 void AFPSAIGuard::BeginPlay()
 {
 	Super::BeginPlay();
+	OriginalRotation = GetActorRotation();
 	PawnSensingComp->OnSeePawn.AddDynamic(this, &AFPSAIGuard::OnPawnSeen);
 	PawnSensingComp->OnHearNoise.AddDynamic(this, &AFPSAIGuard::OnNoiseHeard);
 	
@@ -35,11 +38,35 @@ void AFPSAIGuard::OnPawnSeen(APawn* SeenPawn)
 	}
 
 	DrawDebugSphere(GetWorld(), SeenPawn->GetActorLocation(), 32.0f, 12, FColor::Red, false, 10.0f);
+
+	AProjectLokiGameMode* GM = Cast<AProjectLokiGameMode>(GetWorld()->GetAuthGameMode());
+	if (GM)
+	{
+		GM->CompleteMission(SeenPawn, false);
+	}
 }
 
 void AFPSAIGuard::OnNoiseHeard(APawn* NoiseInstigator, const FVector& Location, float Volume)
 {
 	DrawDebugSphere(GetWorld(), Location, 32.0f, 12, FColor::Black, false, 10.0f);
+
+	//Rotate the guard
+	FVector Direction = Location - GetActorLocation();
+	Direction.Normalize();
+
+	FRotator NewLookAt =  FRotationMatrix::MakeFromX(Direction).Rotator();
+	NewLookAt.Pitch = 0.0f;
+	NewLookAt.Roll = 0.0f;
+
+	SetActorRotation(NewLookAt);
+
+	GetWorldTimerManager().ClearTimer(TimerHandle_ResetOrientation);
+	GetWorldTimerManager().SetTimer(TimerHandle_ResetOrientation, this, &AFPSAIGuard::ResetOrientation, 3.0f);
+}
+
+void AFPSAIGuard::ResetOrientation()
+{
+	SetActorRotation(OriginalRotation);
 }
 
 // Called every frame

@@ -17,7 +17,7 @@ AProjectLokiGameMode::AProjectLokiGameMode()
 	HUDClass = AProjectLokiHUD::StaticClass();
 }
 
-void AProjectLokiGameMode::CompleteMission(APawn* InstigatorPawn)
+void AProjectLokiGameMode::CompleteMission(APawn* InstigatorPawn, bool bMissionSuccess)
 {
 	if(InstigatorPawn)
 	{
@@ -48,7 +48,7 @@ void AProjectLokiGameMode::CompleteMission(APawn* InstigatorPawn)
 
 	}
 
-	OnMissionCompleted(InstigatorPawn);
+	OnMissionCompleted(InstigatorPawn, bMissionSuccess);
 
 	
 }

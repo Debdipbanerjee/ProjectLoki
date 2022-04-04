@@ -5,6 +5,7 @@
 #include "ProjectLokiCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "UObject/ConstructorHelpers.h"
+#include "FPSGameState.h"
 
 AProjectLokiGameMode::AProjectLokiGameMode()
 	: Super()
@@ -15,13 +16,15 @@ AProjectLokiGameMode::AProjectLokiGameMode()
 
 	// use our custom HUD class
 	HUDClass = AProjectLokiHUD::StaticClass();
+
+	GameStateClass = AFPSGameState::StaticClass();
 }
 
 void AProjectLokiGameMode::CompleteMission(APawn* InstigatorPawn, bool bMissionSuccess)
 {
 	if(InstigatorPawn)
 	{
-		InstigatorPawn->DisableInput(nullptr);
+		//InstigatorPawn->DisableInput(nullptr);
 
 		if(SpectatingViewPointClass)
 		{
@@ -46,6 +49,13 @@ void AProjectLokiGameMode::CompleteMission(APawn* InstigatorPawn, bool bMissionS
 			UE_LOG(LogTemp, Warning, TEXT("Spectatingviewclass is null ptr, plase update game mode"));
 		}
 
+	}
+
+	
+	AFPSGameState* GS = GetGameState<AFPSGameState>();
+	if(GS)
+	{
+		GS->MulticastOnMissionComplete(InstigatorPawn, bMissionSuccess);
 	}
 
 	OnMissionCompleted(InstigatorPawn, bMissionSuccess);

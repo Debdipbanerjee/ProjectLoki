@@ -189,7 +189,6 @@ void AProjectLokiCharacter::OnFire()
 {
 	ServerFire();
 
-	
 
 	// try and play the sound if specified
 	if (FireSound != nullptr)
@@ -334,5 +333,4 @@ void AProjectLokiCharacter::Tick(float DeltaTime)
 		FirstPersonCameraComponent->SetRelativeRotation(NewRot);
 	}
 
-	
 }

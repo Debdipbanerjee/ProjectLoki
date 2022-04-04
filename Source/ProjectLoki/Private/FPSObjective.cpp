@@ -21,6 +21,7 @@ AFPSObjective::AFPSObjective()
 	SphereComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	SphereComp->SetupAttachment(MeshComp);
 
+	SetReplicates(true);
 }
 
 // Called when the game starts or when spawned
@@ -41,13 +42,17 @@ void AFPSObjective::NotifyActorBeginOverlap(AActor* OtherActor)
 
 	PlayEffects();
 
-	AProjectLokiCharacter* MyCharacter = Cast<AProjectLokiCharacter>(OtherActor);
-	if(MyCharacter)
+	if(HasAuthority())
 	{
-		MyCharacter->bIsCarryingObjective = true;
+		AProjectLokiCharacter* MyCharacter = Cast<AProjectLokiCharacter>(OtherActor);
+		if (MyCharacter)
+		{
+			MyCharacter->bIsCarryingObjective = true;
 
-		Destroy();
+			Destroy();
+		}
 	}
+	
 }
 
 void AFPSObjective::PlayEffects()

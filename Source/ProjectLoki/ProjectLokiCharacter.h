@@ -90,8 +90,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	uint8 bUsingMotionControllers : 1;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Gameplay")
-		bool bIsCarryingObjective;
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Gameplay")
+	bool bIsCarryingObjective;
 
 protected:
 

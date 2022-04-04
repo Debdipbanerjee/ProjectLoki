@@ -5,8 +5,7 @@
 #include "DrawDebugHelpers.h"
 #include "ProjectLoki/ProjectLokiGameMode.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
-
-
+#include "Net/UnrealNetwork.h"
 
 
 // Sets default values
@@ -105,6 +104,12 @@ void AFPSAIGuard::ResetOrientation()
 	}
 }
 
+void AFPSAIGuard::OnRep_GuardState()
+{
+
+	OnStateChanged(GuardState);
+}
+
 void AFPSAIGuard::SetGuardState(EAIState NewState)
 {
 
@@ -114,8 +119,7 @@ void AFPSAIGuard::SetGuardState(EAIState NewState)
 	}
 
 	GuardState = NewState;
-
-	OnStateChanged(GuardState);
+	OnRep_GuardState();
 }
 
 // Called every frame
@@ -150,6 +154,16 @@ void AFPSAIGuard::MoveToNextPatrolPoint()
 	UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), CurrentPatrolPoint);
 
 }
+
+void AFPSAIGuard::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME (AFPSAIGuard, GuardState);
+
+}
+
+
 
 
 

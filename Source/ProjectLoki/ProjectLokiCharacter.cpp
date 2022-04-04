@@ -12,6 +12,7 @@
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 #include "Components/PawnNoiseEmitterComponent.h"
+#include "Net/UnrealNetwork.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -332,5 +333,15 @@ void AProjectLokiCharacter::Tick(float DeltaTime)
 
 		FirstPersonCameraComponent->SetRelativeRotation(NewRot);
 	}
+
+}
+
+void AProjectLokiCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AProjectLokiCharacter, bIsCarryingObjective);
+
+	//DOREPLIFETIME(AProjectLokiCharacter, bIsCarryingObjective, COND_OwnerOnly);
 
 }

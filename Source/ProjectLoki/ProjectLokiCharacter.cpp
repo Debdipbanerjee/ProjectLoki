@@ -144,7 +144,7 @@ void AProjectLokiCharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AProjectLokiCharacter::LookUpAtRate);
 }
 
-void AProjectLokiCharacter::OnFire()
+void AProjectLokiCharacter::ServerFire_Implementation()
 {
 	// try and fire a projectile
 	if (ProjectileClass != nullptr)
@@ -175,6 +175,21 @@ void AProjectLokiCharacter::OnFire()
 			}
 		}
 	}
+}
+
+
+
+bool AProjectLokiCharacter::ServerFire_Validate()
+{
+	return true;
+}
+
+
+void AProjectLokiCharacter::OnFire()
+{
+	ServerFire();
+
+	
 
 	// try and play the sound if specified
 	if (FireSound != nullptr)
@@ -305,4 +320,19 @@ bool AProjectLokiCharacter::EnableTouchscreenMovement(class UInputComponent* Pla
 	}
 	
 	return false;
+}
+
+void AProjectLokiCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if(!IsLocallyControlled())
+	{
+		FRotator NewRot = FirstPersonCameraComponent->GetRelativeRotation();
+		NewRot.Pitch = RemoteViewPitch * 360.0f / 254.0f;
+
+		FirstPersonCameraComponent->SetRelativeRotation(NewRot);
+	}
+
+	
 }

@@ -94,9 +94,12 @@ public:
 		bool bIsCarryingObjective;
 
 protected:
-	
+
 	/** Fires a projectile. */
 	void OnFire();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerFire();
 
 	/** Resets HMD orientation and position in VR. */
 	void OnResetVR();
@@ -151,5 +154,6 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+	virtual void Tick(float DeltaTime) override;
 };
 

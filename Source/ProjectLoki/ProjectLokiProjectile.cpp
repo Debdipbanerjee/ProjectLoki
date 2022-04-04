@@ -29,6 +29,9 @@ AProjectLokiProjectile::AProjectLokiProjectile()
 
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.0f;
+
+	SetReplicates(true);
+	SetReplicateMovement(true);
 }
 
 void AProjectLokiProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -41,6 +44,11 @@ void AProjectLokiProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAc
 		
 	}
 
-	MakeNoise(1.0f, AProjectLokiProjectile::GetInstigator());
-	Destroy();
+	if(HasAuthority())
+	{
+		MakeNoise(1.0f, AProjectLokiProjectile::GetInstigator());
+		Destroy();
+	}
+	
+	
 }
